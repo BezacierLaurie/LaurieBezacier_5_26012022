@@ -1,4 +1,4 @@
-// Création des cartes
+// Création des cartes - Page 'index'
 // Fonction qui récupère les données des articles du catalogue de l'API + modification des informations des produits
 function recupDataAPI() {
     const response = fetch("http://localhost:3000/api/products")
@@ -9,44 +9,41 @@ function recupDataAPI() {
         .then(function (data) {
             // Afficher les données sous forme de tableau
             console.table(data)
-            // Création de la boucle qui récupère toutes les infos des produits
+
+            // Carte initiale : récupération
+            let card = document.querySelector("#items > a");
+
+            // Suppression du noeud contenant la carte initiale (visuellement)
+            let cardParent = document.getElementById("items");
+            let cardEnfant = document.querySelector("#items > a");
+            cardParent.removeChild(cardEnfant);
+
+            // Création de la boucle : clonage des cartes + récupération des infos de chaque produit
             for (let canap of data) {
-                console.log(canap.name)
-                // Récupérer le nom du produit
-                let nom = document.getElementsByClassName("productName");
-                // Modifier le nom du produit
-                //card 1 = nouveau nom de la card 1
-                nom[0].innerHTML = canap.name
-                nom[1].innerHTML = canap.name
-                nom[2].innerHTML = canap.name
-                nom[3].innerHTML = canap.name
-                nom[4].innerHTML = canap.name
-                nom[5].innerHTML = canap.name
-                nom[6].innerHTML = canap.name
-                nom[7].innerHTML = canap.name
-                console.log(nom[1])
-                
-                /* // Récupérer l'image
-                let img = document.querySelectorAll("#items a.article > img");
-                console.log(canap.imageUrl)
-                // Modifier l'image 
-                //img[0].innerHTML = canap.imageUrl
-                //console.log(img) */
-                /* // Récupérer l'attribut alt
-                 let alt = document.getElementById('items');
-                console.log(canap.altTxt)
-                // Modifier l'attribut alt
-                alt.innerHTML = canap.altTxt; */
-                /* // Récupérer la description
-                let descr = document.getElementsByClassName("productDescription");
-                console.log(canap.description)
-                // Modifier la description
-                descr.innerHTML = canap.description;
-                // Récupérer les ID
-                //console.log(canap._id) */
+                //console.log(canap.altTxt)
+
+                // Clonage de la carte exemple
+                // Enfant créé : Carte clonée 'nouvelle carte' : création des autres cartes
+                let clone = card.cloneNode(true);
+
+                // Modification des données des produits (photo de chaque produit) - attributs HTML
+                clone.querySelector("article > img").setAttribute("src", canap.imageUrl);
+                // Modification des données des produits (de l'attribut de la photo de chaque produit) - attributs HTML
+                clone.querySelector("article > img").setAttribute("alt", canap.altTxt);
+
+                // Modification des données des produits (nom de chaque produit) - attributs HTML
+                clone.querySelector(".productName").innerText = canap.name;
+                // OU clone.querySelector("article > h3").innerText = canap.name;
+
+                // Modification des données des produits (description de chaque produit) - attributs HTML
+                clone.querySelector(".productDescription").innerText = canap.description;
+                // OU clone.querySelector("article > p").innerText = canap.description;
+
+                // Sélectionne le futur parent : items du clone
+                let parent = document.getElementById("items");
+                // Ajout de l'enfant à la fin de la liste des enfants du parent
+                parent.appendChild(clone);
             }
-
-
         })
         .catch(function (err) {});
 };
