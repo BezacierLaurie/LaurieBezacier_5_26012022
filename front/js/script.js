@@ -39,21 +39,14 @@ function recupDataAPI() {
                 clone.querySelector(".productDescription").innerText = canap.description;
                 // OU clone.querySelector("article > p").innerText = canap.description;
 
+                // Modification du lien de chaque produit
+                clone.setAttribute("href", "product.html?id=" + canap._id);
+                console.log("product.html?id=" + canap._id)
+
                 // Sélectionne le futur parent : items du clone
                 let parent = document.getElementById("items");
                 // Ajout de l'enfant à la fin de la liste des enfants du parent
                 parent.appendChild(clone);
-
-                // Modification du lien de chaque produit
-                clone.setAttribute("href", idCards);
-                // MDN
-                /* let params = (new URL("./product.html?id=".canap._id)).searchParams;
-                let idCards = params.get(canap._id); */
-                // WTL X
-                /* let url = "./product.html?id=" + canap._id;
-                let newUrl = new URL(url);
-                let idCards = newUrl.searchParams.get("canap_id"); */
-                console.log("./product.html?id=" + canap._id)
             }
         })
         .catch(function (err) {});
