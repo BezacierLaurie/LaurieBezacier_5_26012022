@@ -66,6 +66,7 @@ btn.addEventListener('click', function (event) {
     /*     let optionSelect = document.select.option.text;
         localStorage.setItem("colorProduit", optionSelect);
      */
+
     // 2ème syntaxe :
     // Création d'objet 'produit' = permet de regrouper les données des produits en une seule clé / valeur
     /*     var produit = {
@@ -81,21 +82,45 @@ btn.addEventListener('click', function (event) {
 
 
     // 3ème syntaxe :
-    //let produit = localStorage.getItem('idProduit', 'colorProduit', 'qteProduit');
+    // Appel de la fonction 'stockValueStorage'
+    stockValueStorage();
+    
+    // Appel de la fonction 'forEachKey'
+    forEachKey();
 
-    // Si la valeur de la clé existe déjà, créer une nouvelle clé / valeur
-    if (localStorage.setItem("idProduit", id) != localStorage.setItem("idProduit", id)) {
-        // alors créer une nouvelle clé / valeur dans LocalStorage
-        creerNewKeyValueStorage();
-    } else {
-        // sinon stocker sa valeur dans LocalStorage
-        stockValueStorage();
+    // Pour empecher le changement de page au 'clic' (du bouton)
+    event.preventDefault();
 
-    }
 
-    function creerNewKeyValueStorage() {
-        localStorage.getItem("idProduit1");
-    }
+    // Déclaration des fonction 'forEachKey', 'createNewKeyValueStorage' et 'stockValueStorage'
+    function forEachKey() {
+        // Pour parcourir les éléments présents dans LocalStorage
+        for (var i = 0; i < localStorage.length; i++) {
+            localStorage.key(i);
+
+            // Si la valeur de la clé existe déjà, créer une nouvelle clé / valeur
+            if (id != localStorage.setItem("idProduit", id)) {
+                // alors créer une nouvelle clé / valeur dans LocalStorage
+                createNewKeyValueStorage();
+
+            } else {
+                // sinon stocker sa valeur dans LocalStorage
+                stockValueStorage();
+
+            }
+        }
+    };
+
+    function createNewKeyValueStorage() {
+        localStorage.setItem('idProduit' + id, id);
+
+        let listeColors = document.getElementById("colors");
+        let colorChoice = listeColors.options[listeColors.selectedIndex].text;
+        localStorage.setItem('colorProduit' + id, colorChoice);
+
+        let qte = document.getElementById("quantity");
+        localStorage.setItem('qteProduit' + id, qte.value);
+    };
 
     function stockValueStorage() {
         localStorage.setItem('idProduit', id);
@@ -106,35 +131,5 @@ btn.addEventListener('click', function (event) {
 
         let qte = document.getElementById("quantity");
         localStorage.setItem('qteProduit', qte.value);
-    }
-
-
-    /* // Pour chaque id créer une clé +1 / valeur et renvoyer sa valeur
-        for (let id of data) {
-            let produitSup = localStorage.getItem('idProduit' + 1 , 'colorProduit' + 1 , 'qteProduit' + 1);
-            console.log(produitSup)
-        } */
-    /*     // Ajout dans localStorage de nouveaux produits dans la sélection
-        if(new id){
-            localStorage.getItem("idProduit", "colorProduit", "qteProduit").length + 1;
-        }
-     */
-
-    // Pour empecher le changement de page au 'clic' (du bouton)
-    event.preventDefault();
-
+    };
 });
-
-/* function modifKey() {
-    for (let key of localStorage) {
-        localStorage.getItem("idProduit", "colorProduit", "qteProduit").length + 1;
-        console.log(id)
-    }
-    if(!"idProduit"){
-        localStorage.getItem("idProduit", "colorProduit", "qteProduit").length + 1;
-
-    }
-
-}; */
-
-//modifKey();
