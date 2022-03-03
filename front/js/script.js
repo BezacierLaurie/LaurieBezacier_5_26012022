@@ -1,7 +1,11 @@
 // Création des cartes - Page 'index'
-// Fonction qui récupère les données des articles du catalogue de l'API + modification des informations des produits
+
+// Appel de la fonction recupDataAPI
+recupDataAPI();
+
+// Fonction qui récupère les données des produits du catalogue de l'API + affichage des informations des produits
 function recupDataAPI() {
-    const response = fetch("http://localhost:3000/api/products")
+    fetch("http://localhost:3000/api/products")
         .then(function (response) {
             console.table(response)
             return response.json()
@@ -51,6 +55,3 @@ function recupDataAPI() {
         })
         .catch(function (err) {});
 };
-
-// Appel de la fonction recupDataAPI
-recupDataAPI();

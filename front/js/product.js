@@ -14,7 +14,7 @@ async function recupDataProduit() {
             return response.json()
         })
         .then(function (data) {
-            console.log(data)
+            //console.log(data)
 
             // Modifications des données de chaque produit
             modifDataProduit(data);
@@ -41,7 +41,7 @@ function modifDataProduit(data) {
     let select = document.getElementById("colors");
 
     for (let color of tabColors) {
-        console.log(color)
+        //console.log(color)
 
         let option = document.createElement("option");
         option.innerText = color;
@@ -51,85 +51,47 @@ function modifDataProduit(data) {
 };
 
 
-// Panier (ajout produits)
+// Evenement 'onClick' sur le bouton 'Ajout au panier' :
 
-// Onclick
 let btn = document.getElementById("addToCart");
 
+// Evénement 'clic' du Btn
 btn.addEventListener('click', function (event) {
-    // Stockage des données dans 'Local Storage'
 
-    // 1ère syntaxe :
-    // localStorage.setItem("idProduit", id);
-    // JSON.parse : Sert à convertir les données au format JSON, qui sont dans le Local Storage, en objet JS
-    //let prodEnrLS = JSON.parse(localStorage.getItem("id"));
-    /*     let optionSelect = document.select.option.text;
-        localStorage.setItem("colorProduit", optionSelect);
-     */
+    // Stockage des données du produit dans localStorage sans écraser la valeur de la clé
 
-    // 2ème syntaxe :
-    // Création d'objet 'produit' = permet de regrouper les données des produits en une seule clé / valeur
-    /*     var produit = {
-            idProduit: id,
-            couleur: couleur,
-            qte: "0 - 100"
-        };
-        localStorage.setItem('produitSelect', JSON.stringify(produit)); // La méthode JSON.stringify() transforme en chaîne de caractères JSON l'objet (JS) transmis en paramètre. 
-     */
-    /*     produitJSON = localStorage.getItem('produitSelect');
-        produit = produitJSON && JSON.Parse(produitJSON); // la méthode JSON.Parse() transforme la chaîne de caractères JSON en objet (JS).
-     */
+    let listeColors = document.getElementById("colors");
+    let colorChoice = listeColors.options[listeColors.selectedIndex].text;
+
+    let qte = document.getElementById("quantity").value;
+
+    // Création de l'objet 'produit' 
+    let produit = {
+        idProduit: id,
+        couleur: colorChoice,
+        qte: qte
+    };
+    console.log(produit)
+
+    // Récupération du 'panier' (dans LS)
+    let panier = localStorage.getItem("panier"); // string ou undefined
+    // Si le panier n'existe pas dans LS alors le créer en objet JS (array vide), sinon convertir le tableau déjà existant en objet JS (array) (pour pouvoir pusher dedans de nouveaux éléments)
+    if (panier == null) {
+        panier = [] // objet JS
+    } else {
+        panier = JSON.parse(panier); // objet JS
+    }
+
+    // Push l'objet 'produit' dans le array (objet JS)
+    panier.push(produit);
+
+    // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
+    panier = JSON.stringify(panier); // string
+
+    // Création d'une nouvelle valeur à la clé 'panier'
+    localStorage.setItem("panier", panier);
 
 
-    // 3ème syntaxe :
-    // Appel de la fonction 'stockValueStorage'
-    stockValueStorage();
-    
-    // Appel de la fonction 'forEachKey'
-    forEachKey();
-
-    // Pour empecher le changement de page au 'clic' (du bouton)
+    // Pour empecher le changement de page au 'clic' (du Btn)
     event.preventDefault();
-
-
-    // Déclaration des fonction 'forEachKey', 'createNewKeyValueStorage' et 'stockValueStorage'
-    function forEachKey() {
-        // Pour parcourir les éléments présents dans LocalStorage
-        for (var i = 0; i < localStorage.length; i++) {
-            localStorage.key(i);
-
-            // Si la valeur de la clé existe déjà, créer une nouvelle clé / valeur
-            if (id != localStorage.setItem("idProduit", id)) {
-                // alors créer une nouvelle clé / valeur dans LocalStorage
-                createNewKeyValueStorage();
-
-            } else {
-                // sinon stocker sa valeur dans LocalStorage
-                stockValueStorage();
-
-            }
-        }
-    };
-
-    function createNewKeyValueStorage() {
-        localStorage.setItem('idProduit' + id, id);
-
-        let listeColors = document.getElementById("colors");
-        let colorChoice = listeColors.options[listeColors.selectedIndex].text;
-        localStorage.setItem('colorProduit' + id, colorChoice);
-
-        let qte = document.getElementById("quantity");
-        localStorage.setItem('qteProduit' + id, qte.value);
-    };
-
-    function stockValueStorage() {
-        localStorage.setItem('idProduit', id);
-
-        let listeColors = document.getElementById("colors");
-        let colorChoice = listeColors.options[listeColors.selectedIndex].text;
-        localStorage.setItem('colorProduit', colorChoice);
-
-        let qte = document.getElementById("quantity");
-        localStorage.setItem('qteProduit', qte.value);
-    };
 });
