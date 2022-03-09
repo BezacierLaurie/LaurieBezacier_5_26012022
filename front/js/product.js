@@ -64,6 +64,7 @@ btn.addEventListener('click', function (event) {
     let colorChoice = listeColors.options[listeColors.selectedIndex].text;
 
     let qte = document.getElementById("quantity").value;
+    // Condition pour mettre à jour la quantité du produit si elle est modifiée (sans changer les autres paramètres)
 
     // Création de l'objet 'produit' 
     let produit = {
@@ -75,10 +76,13 @@ btn.addEventListener('click', function (event) {
 
     // Récupération du 'panier' (dans LS)
     let panier = localStorage.getItem("panier"); // string ou undefined
-    // Si le panier n'existe pas dans LS alors le créer en objet JS (array vide), sinon convertir le tableau déjà existant en objet JS (array) (pour pouvoir pusher dedans de nouveaux éléments)
+    // Si le panier n'existe pas dans LS 
     if (panier == null) {
+        // Alors le créer en objet JS (array vide)
         panier = [] // objet JS
-    } else {
+    }
+    // Sinon convertir le tableau déjà existant en objet JS (array) (pour pouvoir pusher dedans de nouveaux éléments)
+    else {
         panier = JSON.parse(panier); // objet JS
     }
 
@@ -90,7 +94,6 @@ btn.addEventListener('click', function (event) {
 
     // Création d'une nouvelle valeur à la clé 'panier'
     localStorage.setItem("panier", panier);
-
 
     // Pour empecher le changement de page au 'clic' (du Btn)
     event.preventDefault();

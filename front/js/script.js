@@ -24,7 +24,7 @@ function recupDataAPI() {
 
             // Création de la boucle : clonage des cartes + récupération des infos de chaque produit
             for (let canap of data) {
-                //console.log(canap.altTxt)
+                //console.log(canap)
 
                 // Clonage de la carte exemple
                 // Enfant créé : Carte clonée 'nouvelle carte' : création des autres cartes
