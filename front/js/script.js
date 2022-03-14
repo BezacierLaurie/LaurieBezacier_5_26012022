@@ -47,9 +47,9 @@ function recupDataAPI() {
                 clone.setAttribute("href", "product.html?id=" + canap._id);
                 console.log("product.html?id=" + canap._id)
 
-                // Sélectionne le futur parent : items du clone
+                // Sélectionne le futur parent : items du clone ('a')
                 let parent = document.getElementById("items");
-                // Ajout de l'enfant à la fin de la liste des enfants du parent
+                // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent
                 parent.appendChild(clone);
             }
         })

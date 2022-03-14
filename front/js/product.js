@@ -86,6 +86,7 @@ btn.addEventListener('click', function (event) {
         panier = JSON.parse(panier); // objet JS
     }
 
+    // If else
     // Push l'objet 'produit' dans le array (objet JS)
     panier.push(produit);
 

@@ -6,79 +6,68 @@ let panierLS = localStorage.getItem("panier");
 
 var panierJS = JSON.parse(panierLS); // objet JS
 
-// Affichage d'un tableau contenant les valeurs des propriétés du array 'panierLS' (objet JS)
-//console.table(Object.values(panierJS)) // = console.table(panierJS)
+// Boucle forEach sur 'panierJS' pour récupérer les 'id' des canaps sélectionnés
+for (let canapsSelectPanierJS of panierJS) {
 
-// Récupération du premier canap sélectionné (objet JS)
-let canapSelectPanierJS = Object.values(panierJS[0]);
-//console.table(canapSelectPanierJS)
+    let idCanapSelect = canapsSelectPanierJS.idProduit;
+    console.log(idCanapSelect)
 
-// Récupération de l'id du premier canap sélectionné
-var idCanapSelect = canapSelectPanierJS[0];
-console.log(idCanapSelect)
+    // Appel de la fonction 'recupDataAPI'
+    recupDataAPI_LS(canapsSelectPanierJS);
+    console.log(canapsSelectPanierJS)
 
-// Appel de la fonction 'recupDataAPI'
-recupDataAPI();
+}
 
-// Fonction qui récupère les données des produits du catalogue de l'API + affichage des informations des produits
-function recupDataAPI() {
-    fetch("http://localhost:3000/api/products/" + idCanapSelect)
+// Fonction qui récupère les données des produits du catalogue de l'API et du LS + affichage des informations des produits / attribut 'canap' = clone de l'attribut 'SelectPanierJS' (objet JS)
+function recupDataAPI_LS(canap) {
+    fetch("http://localhost:3000/api/products/" + canap.idProduit)
         .then(function (response) {
-            console.table(response)
+            //console.table(response)
             return response.json()
         })
         .then(function (data) {
             // Afficher les données sous forme de tableau
-            console.table(data)
+            //console.table(data)
 
             // Carte initiale : récupération
             let card = document.querySelector("#cart__items > article");
 
             // Suppression du noeud contenant la carte initiale (visuellement)
             let cardParent = document.getElementById("cart__items");
-            let cardEnfant = card;
+            let cardEnfant = document.querySelector("#cart__items > article");
             cardParent.removeChild(cardEnfant);
 
-            // Création de la boucle : clonage des cartes + récupération des infos de chaque produit sélectionné
-            for (let canapSelect of data) {
-                console.log(canapSelect)
+            // Clonage des cartes + récupération des infos de chaque canap sélectionné
 
-                // Clonage de la carte exemple
-                var clone = card.cloneNode(true);
+            // Clonage de la carte exemple
+            let clone = card.cloneNode(true);
+            //console.log(clone)
 
-                // Photo du produit sélectionné
-                clone.querySelector(".cart__item__img > img").setAttribute("src", canapSelect.imageURL);
+            // Données récupérées dans l'API
+            // Photo du produit sélectionné
+            clone.querySelector(".cart__item__img > img").setAttribute("src", data.imageUrl);
+            //console.log(data.imageUrl)
 
-                // Alt de la photo du produit sélectionné
-                clone.querySelector(".cart__item__img > img").setAttribute("alt", canapSelect.altTxt);
+            // Alt de la photo du produit sélectionné
+            clone.querySelector(".cart__item__img > img").setAttribute("alt", data.altTxt);
 
-                // Nom du produit sélectionné
-                clone.querySelector(".cart__item__content__description > h2").innerText = canapSelect.name;
+            // Nom du produit sélectionné
+            clone.querySelector(".cart__item__content__description > h2").innerText = data.name;
 
-                // Prix du produit sélectionné
-                clone.querySelector(".cart__item__content .prixProduitSelect").innerText = canapSelect.price;
+            // Prix du produit sélectionné
+            clone.querySelector(".cart__item__content .prixProduitSelect").innerText = data.price;
 
-                // Sélection du futur parent : 'cart__items' du clone
-                let parent = document.getElementById("cart__items");
-                // Ajout de l'enfant à la fin de la liste des enfants du parent
-                parent.appendChild(clone);
-            }
+            // Données récupérées dans LS
+            // Couleur du produit sélectionné
+            clone.querySelector(".cart__item__content .couleurProduitSelect").innerText = canap.couleur;
 
-            // Appel de la fonction 'recupDataLS'
-            recupDataLS();
+            // Quantité du produit sélectionné
+            clone.querySelector(".cart__item__content__settings__quantity > input").value = canap.qte;
+
+            // Sélectionne le futur parent : cart__items du clone ('article')
+            //let cardParent = document.getElementById("cart__items");
+            // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent
+            cardParent.appendChild(clone);
         })
         .catch(function (err) {});
 };
-
-function recupDataLS() {
-    // ForEach pour récupérer la liste des données des canaps sélectionnés (objets JS) de 'panierJS' (propriétés du array)
-    for (let allCanapSelect of panierJS) {
-        //console.table(allCanapSelect);
-
-        // Couleur du produit sélectionné
-        clone.querySelector(".cart__item__content .couleurProduitSelect").innerText = allCanapSelect.couleur;
-
-        // Quantité du produit sélectionné
-        clone.querySelector(".cart__item__content__settings__quantity > input").value = allCanapSelect.qte;
-    }
-}
