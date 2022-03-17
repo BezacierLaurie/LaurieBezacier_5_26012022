@@ -63,13 +63,14 @@ btn.addEventListener('click', function (event) {
     let listeColors = document.getElementById("colors");
     let colorChoice = listeColors.options[listeColors.selectedIndex].text;
 
+    // Input
     let qte = document.getElementById("quantity").value;
 
     // Création de l'objet 'produit' 
     var produit = {
         idProduit: id,
         couleur: colorChoice,
-        qteTotale: qte
+        qte: qte
     };
 
     // Récupération du 'panier' (dans LS)
@@ -84,32 +85,47 @@ btn.addEventListener('click', function (event) {
         panier = JSON.parse(panier); // objet JS
     }
 
-   //panier.push(produit);
+    //panier.push(produit);
 
     // Fonction pour savoir si l'objet 'produit' est présent dans le array 'panier'
-    function include(panier, produit)
-    {
-        let includeTest = panier.indexOf(produit) != -1;
-        console.log(includeTest) // true = oui / false = non
-        return (panier.indexOf(produit) != -1);
+    function include(panier, produit) {
+        const indexItem = panier.findIndex(item => {
+            return item.id === produit.id && item.color === produit.color;
+        });
+        return indexItem;
     }
 
-     if (include(panier, produit) == false) {
-        // Push l'objet 'produit' dans le array (objet JS)
+    // Appel de la fonction 'include'
+    let index = include(panier, produit);
+
+    // Condition : 
+    if (index == -1) // Si l'index de 'produit' n'est pas présent dans le array
+    {
+        // Alors pusher l'objet 'produit' dans le array (objet JS)
         panier.push(produit);
+        
         console.log('produit ajouté')
-    } else {
+    } 
+    else // Sinon (s'il est déjà présent) modifier sa quantité initiale
+    {
         console.log("produit déjà présent")
 
-        // Appel de la fonction 'ajoutQteSup'
-        ajoutQteSup(produit)
-    } 
- 
-    // Création de la fonction 'ajoutQteSup'
-    function ajoutQteSup(produit) {
-        qte = produit.qteTotale + produit.qteTotale;
-        console.log('quantité modifiée')
-    };
+        let qteInit = panier[index].qte
+        qteInit = JSON.parse(qteInit); // nb
+        console.log(qteInit)
+
+        let qteAjout = produit.qte
+        qteAjout = JSON.parse(qteAjout); // nb
+        console.log(qteAjout)
+
+        let qteTotale = qteInit + qteAjout // nb
+
+        // Modification de la valeur de la quantité initiale
+        qteInit = qteTotale // nb
+        //qteInit = JSON.stringify(qteInit); // string
+        console.log("nouvelle quantité : " + qteInit)
+        //console.log(qteInit)
+    }
 
     // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
     panier = JSON.stringify(panier); // string
