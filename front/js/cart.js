@@ -18,6 +18,14 @@ for (let canapsSelectPanierJS of panierJS) {
 
 }
 
+// Carte initiale : récupération
+let card = document.querySelector("#cart__items > article");
+
+// Suppression du noeud contenant la carte initiale (visuellement)
+let cardParent = document.getElementById("cart__items");
+let cardEnfant = document.querySelector("#cart__items > article");
+cardParent.removeChild(cardEnfant);
+
 // Fonction qui récupère les données des produits du catalogue de l'API et du LS + affichage des informations des produits / attribut 'canap' = clone de l'attribut 'SelectPanierJS' (objet JS)
 function recupDataAPI_LS(canap) {
     fetch("http://localhost:3000/api/products/" + canap.idProduit)
@@ -28,14 +36,6 @@ function recupDataAPI_LS(canap) {
         .then(function (data) {
             // Afficher les données sous forme de tableau
             //console.table(data)
-
-            // Carte initiale : récupération
-            let card = document.querySelector("#cart__items > article");
-
-            // Suppression du noeud contenant la carte initiale (visuellement)
-            let cardParent = document.getElementById("cart__items");
-            let cardEnfant = document.querySelector("#cart__items > article");
-            cardParent.removeChild(cardEnfant);
 
             // Clonage des cartes + récupération des infos de chaque canap sélectionné
 
@@ -62,7 +62,7 @@ function recupDataAPI_LS(canap) {
             clone.querySelector(".cart__item__content .couleurProduitSelect").innerText = canap.couleur;
 
             // Quantité du produit sélectionné
-            clone.querySelector(".cart__item__content__settings__quantity > input").value = canap.qte;
+            clone.querySelector(".cart__item__content__settings__quantity > input").value = canap.qteTotale;
 
             // Sélectionne le futur parent : cart__items du clone ('article')
             //let cardParent = document.getElementById("cart__items");
