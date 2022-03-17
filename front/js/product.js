@@ -90,7 +90,7 @@ btn.addEventListener('click', function (event) {
     // Fonction pour savoir si l'objet 'produit' est présent dans le array 'panier'
     function include(panier, produit) {
         const indexItem = panier.findIndex(item => {
-            return item.id === produit.id && item.color === produit.color;
+            return item.id === produit.idProduit && item.color === produit.couleur;
         });
         return indexItem;
     }
@@ -103,28 +103,21 @@ btn.addEventListener('click', function (event) {
     {
         // Alors pusher l'objet 'produit' dans le array (objet JS)
         panier.push(produit);
-        
+
         console.log('produit ajouté')
-    } 
-    else // Sinon (s'il est déjà présent) modifier sa quantité initiale
+    } else // Sinon (s'il est déjà présent) modifier sa quantité initiale
     {
         console.log("produit déjà présent")
 
-        let qteInit = panier[index].qte
-        qteInit = JSON.parse(qteInit); // nb
-        console.log(qteInit)
-
-        let qteAjout = produit.qte
-        qteAjout = JSON.parse(qteAjout); // nb
-        console.log(qteAjout)
-
-        let qteTotale = qteInit + qteAjout // nb
+        // Conversion en nb pour pouvoir réaliser l'addition des 'qte'
+        //panier[index].qte = qte d'origine
+        panier[index].qte = JSON.parse(panier[index].qte); // nb
+        //produit.qte = nouvelle qte ajoutée
+        produit.qte = JSON.parse(produit.qte); // nb
 
         // Modification de la valeur de la quantité initiale
-        qteInit = qteTotale // nb
-        //qteInit = JSON.stringify(qteInit); // string
-        console.log("nouvelle quantité : " + qteInit)
-        //console.log(qteInit)
+        let qteTotale = panier[index].qte + produit.qte // nb
+        panier[index].qte = qteTotale // nb
     }
 
     // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
