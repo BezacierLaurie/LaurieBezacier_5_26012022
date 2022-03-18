@@ -111,9 +111,11 @@ btn.addEventListener('click', function (event) {
 
         // Conversion en nb pour pouvoir réaliser l'addition des 'qte'
         //panier[index].qte = qte d'origine
-        panier[index].qte = JSON.parse(panier[index].qte); // nb
+        panier[index].qte = parseInt(panier[index].qte); // nb
+        console.log(panier[index].qte)
         //produit.qte = nouvelle qte ajoutée
-        produit.qte = JSON.parse(produit.qte); // nb
+        produit.qte = parseInt(produit.qte); // nb
+        console.log(produit.qte)
 
         // Modification de la valeur de la quantité initiale
         let qteTotale = panier[index].qte + produit.qte // nb

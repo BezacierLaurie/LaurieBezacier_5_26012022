@@ -1,4 +1,4 @@
-// Eviter l'erreur lorsque LS vide
+// Eviter l'erreur (dans la console) lorsque LS vide
 if (panierLS !== null) {
     afficherProduits();
 }
