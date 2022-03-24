@@ -1,4 +1,9 @@
 // Eviter l'erreur (dans la console) lorsque LS vide
+
+// Récupération de l'id de chaque produit dans LS
+let panierLS = localStorage.getItem("panier");
+//console.log(panierLS)
+
 if (panierLS !== null) {
     afficherProduits();
 }
@@ -6,10 +11,6 @@ if (panierLS !== null) {
 function afficherProduits() {
 
     // Création des cartes - Page 'cart'
-
-    // Récupération de l'id de chaque produit dans LS
-    let panierLS = localStorage.getItem("panier");
-    //console.log(panierLS)
 
     var panierJS = JSON.parse(panierLS); // objet JS
 
@@ -78,5 +79,4 @@ function afficherProduits() {
             })
             .catch(function (err) {});
     };
-
 }
