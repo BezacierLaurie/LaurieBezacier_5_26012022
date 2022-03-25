@@ -42,7 +42,7 @@ function modifDataProduit(data) {
     };
 };
 
-// Evenement 'onClick' sur le bouton 'Ajout au panier' :
+// Ajouter un canap : Evenement 'onClick' sur le bouton 'Ajout au panier' :
 
 let btn = document.getElementById("addToCart");
 
@@ -75,9 +75,9 @@ btn.addEventListener('click', function (event) {
         panier = JSON.parse(panier); // objet JS
     }
 
-    // Pour connaitre l'index de l'objet 'produit' dans le array 'panier'
-    const indexProduit = (item) => (item.idProduit == produit.idProduit) && (item.couleur == produit.couleur); // méthode 'item' : true ou false
-    let index = panier.findIndex(indexProduit); // méthode 'findIndex' : '-1' s'il n'existe pas , sinon son 'index'
+    // Pour connaitre l'index de l'objet 'produit' (à supprimer) dans le array 'panier'
+    const indexProduit = (item) => (item.idProduit == produit.idProduit) && (item.couleur == produit.couleur); // méthode 'item' : true (si 'idProduit' du 'panier(LS)' est identique à celui de l'objet JS 'produit' (de panier(JS))) ou false (si différent)
+    let index = panier.findIndex(indexProduit); // méthode 'findIndex' : '-1' s'il n'existe pas , sinon renvoie son 'index'
 
     if (index == -1) // Si l'index de l'objet 'produit' n'est pas présent dans le array 'panier'
     {
@@ -89,7 +89,7 @@ btn.addEventListener('click', function (event) {
     {
         //console.log("produit déjà présent")
 
-        // Conversion en nb pour pouvoir réaliser l'addition des 'qte'
+        // Conversion des 'qte' ('string') en 'qte' (nb) pour pouvoir réaliser l'addition des 'qte'
         let qteTotale = parseInt(panier[index].qte) + parseInt(produit.qte);
 
         // Modification (de la valeur) de la quantité initiale

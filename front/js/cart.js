@@ -17,13 +17,12 @@ function afficherProduits() {
     // Boucle forEach sur 'panierJS' pour récupérer les 'id' des canaps sélectionnés
     for (let canapsSelectPanierJS of panierJS) {
 
-        let idCanapSelect = canapsSelectPanierJS.idProduit;
-        console.log(idCanapSelect)
+        /* let idCanapSelect = canapsSelectPanierJS.idProduit;
+        console.log(idCanapSelect) */
 
         // Appel de la fonction 'recupDataAPI'
         recupDataAPI_LS(canapsSelectPanierJS);
-        console.log(canapsSelectPanierJS)
-
+        //console.log(canapsSelectPanierJS)
     }
 
     // Carte initiale : récupération
@@ -63,20 +62,39 @@ function afficherProduits() {
                 clone.querySelector(".cart__item__content__description > h2").innerText = data.name;
 
                 // Prix du produit sélectionné
-                clone.querySelector(".cart__item__content .prixProduitSelect").innerText = data.price;
+                clone.querySelector(".cart__item__content .prixProduitSelect").innerText = data.price + " €";
 
                 // Données récupérées dans LS
                 // Couleur du produit sélectionné
                 clone.querySelector(".cart__item__content .couleurProduitSelect").innerText = canap.couleur;
 
                 // Quantité du produit sélectionné
-                clone.querySelector(".cart__item__content__settings__quantity > input").value = canap.qteTotale;
+                clone.querySelector(".cart__item__content .cart__item__content__settings__quantity > input").setAttribute("value", canap.qte);
 
-                // Sélectionne le futur parent : cart__items du clone ('article')
-                //let cardParent = document.getElementById("cart__items");
-                // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent
+                // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent 'cardParent'
                 cardParent.appendChild(clone);
             })
             .catch(function (err) {});
     };
-}
+
+    // Supression d'un produit
+
+    let btnSup = document.querySelector(".cart__item__content__settings__delete > p")
+
+    btnSup.addEventListener("click", supCanap, false);
+    btnSup.removeEventListener("click", supCanap, true);
+
+    function supCanap() {
+        alert("le canap a bien été supprimé")
+
+        /* // Pour connaitre l'index de l'objet 'produit' (à supprimer) dans le array 'panier'
+        const indexProduit = (item) => (item.idProduit == produit.idProduit) && (item.couleur == produit.couleur); // méthode 'item' : true (si 'idProduit' du 'panier(LS)' est identique à celui de l'objet JS 'produit' (de panier(JS))) ou false (si différent)
+
+        let index = panierJS.findIndex(indexProduit); // méthode 'findIndex' : '-1' s'il n'existe pas , sinon renvoie son 'index'
+
+        if (index > -1) {
+            panierJS.splice(index, 1);
+            alert("le canap a bien été supprimé")
+        } */
+    };    
+};
