@@ -14,16 +14,18 @@ function afficherProduits() {
 
     // Création des cartes - Page 'cart'
 
-    var panierJS = JSON.parse(panierLS); // objet JS
+    let panierJS = JSON.parse(panierLS); // objet JS
+
+    // Compteur = sert à récupérer l'index du array 'panier'
+    let compteur = 0; // Valeur initiale
 
     // Boucle forEach sur 'panierJS' pour récupérer les 'id' des 'canap' sélectionnés
     for (let canapsSelectPanierJS of panierJS) {
+        // Appel de la fonction 'afficherProduit'
+        afficherProduit(canapsSelectPanierJS, compteur);
 
-        /* let idCanapSelect = canapsSelectPanierJS.idProduit;
-        console.log(idCanapSelect) */
-
-        // Appel de la fonction 'recupDataAPI'
-        recupDataAPI_LS(canapsSelectPanierJS);
+        // Récupère l'index à chacun des tours (de la boucle)
+        compteur = compteur + 1; // idem : 'compteur++;' 
     }
 
     // Carte initiale : récupération
@@ -34,8 +36,8 @@ function afficherProduits() {
     let cardEnfant = document.querySelector("#cart__items > article");
     cardParent.removeChild(cardEnfant);
 
-    // Fonction qui récupère les données des produits du catalogue de l'API et du LS + affichage des informations des produits / attribut 'canap' = clone de l'attribut 'SelectPanierJS' (objet JS)
-    function recupDataAPI_LS(canap) {
+    // Fonction qui affiche chacun des 'canap' sélectionnés, en récupérant les données dans l'API et du LS et en affichant ces informations / attribut 'canap' = clone de l'attribut 'SelectPanierJS' (objet JS)
+    function afficherProduit(canap, compteur) {
         fetch("http://localhost:3000/api/products/" + canap.idProduit)
             .then(function (response) {
                 //console.table(response)
@@ -60,89 +62,80 @@ function afficherProduits() {
                 // Nom du 'canap' sélectionné
                 clone.querySelector(".cart__item__content__description > h2").innerText = data.name;
 
-                // Prix du 'canap' sélectionné
-                let prixCanap = data.price*canap.qte;
-                clone.querySelector(".cart__item__content .prixProduitSelect").innerText = prixCanap + " €";
-
                 // Données récupérées dans LS
 
                 // Couleur du 'canap' sélectionné
                 clone.querySelector(".cart__item__content .couleurProduitSelect").innerText = canap.couleur;
 
-
+                // Prix (initial) du 'canap' sélectionné
+                let prixCanap = data.price * canap.qte;
+                clone.querySelector(".cart__item__content .prixProduitSelect").innerText = prixCanap + " €";
 
                 // Quantité (initiale) du 'canap' sélectionné
-                clone.querySelector(".cart__item__content .cart__item__content__settings__quantity > input").setAttribute("value", canap.qte);
+                clone.querySelector(".itemQuantity").setAttribute("value", canap.qte);
 
                 // Modification (de la valeur) de la quantité initiale
-                clone.querySelector(".cart__item__content .cart__item__content__settings__quantity > input").addEventListener('change', function (canap) {
-                    //console.log("change : OK !")
-
-                    // Pour connaitre l'index de l'objet 'canap' (dont on souhaite modifier la 'qte') dans le array 'panier'
-                    const indexProduit = (item) => (item.idProduit == canap.idProduit) && (item.couleur == canap.couleur); // méthode 'item' : true (si 'idProduit' du 'panier(LS)' est identique à celui de l'objet JS ''canap'' (de panier(JS))) ou false (si différent)
-
-                    let index = panierJS.findIndex(indexProduit); // méthode 'findIndex' : '-1' s'il n'existe pas , sinon renvoie son 'index'
-                    console.log(index)
-
-                    if (index == -1) // Si l'index de l'objet 'canap' n'est pas présent dans le array 'panier'
-                    {
-                        // Alors modifier la quantité initiale
-                        // Conversion des 'qte' ('string') en 'qte' (nb) pour pouvoir réaliser l'addition des 'qte'
-                        let qteTotale = parseInt(panierJS[index].qte) + parseInt(canap.qte);
-                        console.log(qteTotale)
-
-                        // Modification (de la valeur) de la quantité initiale
-                        panierJS[index].qte = qteTotale;
-
-                        console.log("quantité initiale modifiée")
-
-                        // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
-                        panierLS = JSON.stringify(panierJS); // string
-
-                        // Création d'une nouvelle valeur à la clé 'panier'
-                        localStorage.setItem("panier", panierLS);
-
-                        console.log("panier mis à jour sur LS")
-                    }
+                clone.querySelector(".itemQuantity").addEventListener('change', function (event) {
+                    modifQte(compteur, event, data, canap, clone);
                 });
 
+                /* // Supression d'un 'canap' dans le panier
+
+                let btnSup = document.querySelector(".deleteItem");
+
+                btnSup.addEventListener('click', function (event) {
+                    supCanap(index, event);
+                });
+ */
                 // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent 'cardParent'
                 cardParent.appendChild(clone);
             })
             .catch(function (err) {});
     };
 
-    // Supression d'un 'canap' dans le panier
+    // 'index' = 'compteur'
+    function modifQte(index, event, data, canap, clone) {
 
-    let btnSup = document.querySelector(".cart__item__content__settings__delete .deleteItem");
+        // Modification (de la valeur) de la quantité initiale
+        panierJS[index].qte = event.target.value; // event.target = représente l'input 'ciblé' (dans le DOM) 
 
-    for (let canap of panierJS) {
+        console.log("quantité initiale modifiée")
 
-        btnSup.addEventListener('click', supCanap(canap));
-        console.log('btnSup fonctionne')
-    }
+        // Modification du prix (initial) du 'canap' sélectionné
+        let prixCanap = data.price * canap.qte;
+        clone.querySelector(".cart__item__content .prixProduitSelect").innerText = prixCanap + " €";
 
-    function supCanap(canap) {
+        // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
+        panierLS = JSON.stringify(panierJS); // string
 
-        // Pour connaitre l'index de l'objet 'canap' (à supprimer) dans le array 'panier'
-        const indexProduit = (item) => (item.idProduit == canap.idProduit) && (item.couleur == canap.couleur); // méthode 'item' : true (si 'idProduit' du 'panier(LS)' est identique à celui de l'objet JS 'produit' (de panier(JS))) ou false (si différent)
-        let index = panierJS.findIndex(indexProduit); // méthode 'findIndex' : '-1' s'il n'existe pas , sinon renvoie son 'index'
-        console.log(index)
+        // Création d'une nouvelle valeur à la clé 'panier'
+        localStorage.setItem("panier", panierLS);
 
-        if (index !== -1) {
-            panierJS.splice(index, 1);
-            // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
-            panierLS = JSON.stringify(panierJS); // string
+        console.log("panier mis à jour sur LS")
+    };
 
-            // Création d'une nouvelle valeur à la clé 'panier'
-            localStorage.setItem("panier", panierLS);
+    // 'index' = 'compteur'
+    function supCanap(index, event) {
 
-            alert("le canap a bien été supprimé")
-        }
+        event.target;
+        panierJS.splice(index, 1);
+
+        // Conversion du array (objet JS) en 'string' (pour pouvoir le re-stocker dans LS) 
+        panierLS = JSON.stringify(panierJS); // string
+
+        // Création d'une nouvelle valeur à la clé 'panier'
+        localStorage.setItem("panier", panierLS);
+
+        alert("le canap a bien été supprimé")
     };
 
     // Prix total 
-     
-    // Nb d'articles
 
+    /* for (let prixCanapAll of panierJS){
+        let prixTotal = prixCanap+
+    };
+    let totalPrice = document.getElementById("totalPrice"); */
+
+    // Nb d'articles
+    document.getElementById("totalQuantity").innerText=panierJS.length;
 };
