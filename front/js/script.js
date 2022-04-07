@@ -24,7 +24,6 @@ function recupDataAPI() {
 
             // Création de la boucle : clonage des cartes + récupération des infos de chaque produit
             for (let canap of data) {
-                //console.log(canap)
 
                 // Clonage de la carte exemple
                 // Enfant créé : Carte clonée 'nouvelle carte' : création des autres cartes
@@ -47,7 +46,7 @@ function recupDataAPI() {
                 clone.setAttribute("href", "product.html?id=" + canap._id);
                 console.log("product.html?id=" + canap._id)
 
-                // Sélectionne le futur parent : items du clone ('a')
+                // Sélectionne le futur parent 
                 let parent = document.getElementById("items");
                 // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent
                 parent.appendChild(clone);
