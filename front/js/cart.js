@@ -17,21 +17,25 @@ function afficherProduits() {
     // Compteur = sert à récupérer l'index du array 'panier' - Valeur initiale
     let compteur = 0;
 
-    // Total du prix du panier - Valeur initiale
+    // Prix total du panier - Valeur initiale
     let prixTotal = 0;
+    prixTotal = parseInt(prixTotal);
 
-    // Suppression du noeud contenant la carte initiale (visuellement)
+    /* // Suppression du noeud contenant la carte initiale (visuellement)
     let cardParent = document.getElementById("cart__items");
     let cardEnfant = document.querySelector("#cart__items > article");
-    cardParent.removeChild(cardEnfant);
+    cardParent.removeChild(cardEnfant); */
 
     // Boucle forEach sur 'panierJS' pour récupérer les 'canap' sélectionnés
     for (let canapsSelectPanierJS of panierJS) {
         // Appel de la fonction 'afficherProduit' ('rangée' dans une variable permet de récupérer le prix de chacun des 'canap')
-        let prixProduit = afficherProduit(canapsSelectPanierJS);
-
-        // Calcul du total du prix du panier
+        let prixProduit = parseInt(afficherProduit(canapsSelectPanierJS, compteur));
+        console.log(prixProduit);
+        // Calcul du prix total du panier
         prixTotal = prixTotal + prixProduit;
+        console.log(prixTotal);
+        // Changement du prix total du panier (visuellement)
+        document.getElementById("totalPrice").innerHTML = prixTotal;
 
         // Récupère l'index à chacun des tours (de la boucle)
         compteur = compteur + 1; // idem : 'compteur++;' 
@@ -42,22 +46,20 @@ function afficherProduits() {
 };
 
 // Fonction qui affiche chacun des 'canap' sélectionnés, en récupérant les données dans l'API et du LS et en affichant ces informations / attribut (en paramètre) 'canap' = clone de l'attribut 'canapsSelectPanierJS' déclaré antérieurement (objet JS)
-function afficherProduit(canap) {
+function afficherProduit(canap, index) {
     fetch("http://localhost:3000/api/products/" + canap.idProduit)
         .then(function (response) {
             //console.table(response)
             return response.json()
         })
-        .then(function (data, canap) {
+        .then(function (data) {
             // Clonage de la carte initiale + récupération des infos de chacun des 'canap' sélectionnés
 
             // Carte initiale : récupération
             let card = document.querySelector("#cart__items > article");
-            console.log(card);
-            
+
             // Clonage de la carte exemple
             let clone = card.cloneNode(true);
-            console.log(clone)
 
             // Données récupérées dans l'API
 
@@ -79,32 +81,34 @@ function afficherProduit(canap) {
             // Quantité (initiale) du 'canap' sélectionné
             clone.querySelector(".itemQuantity").setAttribute("value", canap.qte);
 
-            /* // Modification (de la valeur) de la quantité initiale
+            // Modification (de la valeur) de la quantité initiale
             clone.querySelector(".itemQuantity").addEventListener('change', function (event) {
                 modifQte(index, event);
             });
- */
-            /* // Supression d'un 'canap' dans le panier
 
+            // Prix (initial) du 'canap' sélectionné
+            let prixCanap = data.price * canap.qte;        
+            clone.querySelector(".cart__item__content .prixProduitSelect").innerText = prixCanap + " €";
+
+            // Supression d'un 'canap' dans le panier
             let btnSup = clone.querySelector(".deleteItem");
-
             btnSup.addEventListener('click', function () {
-                console.log("événement joué");
                 supCanap(index);
-            }); */
+            });
 
             // Sélectionne le futur parent 
             let cardParent = document.getElementById("cart__items");
             // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent 'cardParent'
             cardParent.appendChild(clone);
 
-            // Calcul du prix de chacun des 'canap' sélectionnés
-            return canap.qte * prixCanap;
+            // La fonction 'afficherProduit' retourne le prix final de chacun des 'canap' sélectionnés
+            console.log("prix total du canapé : " + prixCanap);
+            return (prixCanap);
         })
         .catch(function (err) {});
 };
 
-/* // 'index' = 'compteur'
+// 'index' = 'compteur'
 function modifQte(index, event) {
 
     let panierJS = JSON.parse(panierLS); // objet JS
@@ -124,9 +128,9 @@ function modifQte(index, event) {
 
     // Pour rafraichir la page : mise à jour des infos
     document.location.reload();
-}; */
+};
 
-/* // 'index' = 'compteur'
+// 'index' = 'compteur'
 function supCanap(index) {
 
     let panierJS = JSON.parse(panierLS); // objet JS
@@ -139,5 +143,13 @@ function supCanap(index) {
     // Création d'une nouvelle valeur à la clé 'panier'
     localStorage.setItem("panier", panierLS);
 
-    alert("le canap a bien été supprimé")
-}; */
+    // Suppression du noeud contenant la carte initiale (visuellement)
+    let cardParent = document.getElementById("cart__items");
+    let cardEnfant = document.querySelector("#cart__items > article");
+    cardParent.removeChild(cardEnfant);
+
+    // Pour rafraichir la page : mise à jour des infos
+    document.location.reload();
+
+    console.log("le canap a bien été supprimé");
+};
