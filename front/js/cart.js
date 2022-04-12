@@ -19,17 +19,16 @@ function afficherProduits() {
 
     // Prix total du panier - Valeur initiale
     let prixTotal = 0;
-    prixTotal = parseInt(prixTotal);
 
-    /* // Suppression du noeud contenant la carte initiale (visuellement)
+    // Suppression du noeud contenant la carte initiale (visuellement)
     let cardParent = document.getElementById("cart__items");
     let cardEnfant = document.querySelector("#cart__items > article");
-    cardParent.removeChild(cardEnfant); */
+    cardParent.removeChild(cardEnfant);
 
     // Boucle forEach sur 'panierJS' pour récupérer les 'canap' sélectionnés
     for (let canapsSelectPanierJS of panierJS) {
         // Appel de la fonction 'afficherProduit' ('rangée' dans une variable permet de récupérer le prix de chacun des 'canap')
-        let prixProduit = parseInt(afficherProduit(canapsSelectPanierJS, compteur));
+        let prixProduit = afficherProduit(canapsSelectPanierJS, compteur);
         console.log(prixProduit);
         // Calcul du prix total du panier
         prixTotal = prixTotal + prixProduit;
@@ -46,8 +45,8 @@ function afficherProduits() {
 };
 
 // Fonction qui affiche chacun des 'canap' sélectionnés, en récupérant les données dans l'API et du LS et en affichant ces informations / attribut (en paramètre) 'canap' = clone de l'attribut 'canapsSelectPanierJS' déclaré antérieurement (objet JS)
-function afficherProduit(canap, index) {
-    fetch("http://localhost:3000/api/products/" + canap.idProduit)
+async function afficherProduit(canap, index) {
+    await fetch("http://localhost:3000/api/products/" + canap.idProduit)
         .then(function (response) {
             //console.table(response)
             return response.json()
