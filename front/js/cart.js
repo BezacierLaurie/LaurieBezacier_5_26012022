@@ -1,52 +1,48 @@
-// Eviter l'erreur (dans la console) lorsque LS vide
-
 // Récupération de l'id de chaque 'canap' dans LS
 let panierLS = localStorage.getItem("panier");
 //console.log(panierLS)
 
+// Prix total du panier - Valeur initiale
+var totalPanier = 0;
+
+// Eviter l'erreur (dans la console) lorsque LS vide
 if (panierLS !== null) {
     afficherProduits();
 } else {
     console.log("Aucun 'canap' n'est encore présent dans le panier")
 };
 
-function afficherProduits() {
+async function afficherProduits() {
 
     let panierJS = JSON.parse(panierLS); // objet JS
 
     // Compteur = sert à récupérer l'index du array 'panier' - Valeur initiale
     let compteur = 0;
 
-    // Prix total du panier - Valeur initiale
-    let prixTotal = 0;
-
-    // Suppression du noeud contenant la carte initiale (visuellement)
-    let cardParent = document.getElementById("cart__items");
-    let cardEnfant = document.querySelector("#cart__items > article");
-    cardParent.removeChild(cardEnfant);
-
     // Boucle forEach sur 'panierJS' pour récupérer les 'canap' sélectionnés
     for (let canapsSelectPanierJS of panierJS) {
         // Appel de la fonction 'afficherProduit' ('rangée' dans une variable permet de récupérer le prix de chacun des 'canap')
-        let prixProduit = afficherProduit(canapsSelectPanierJS, compteur);
-        console.log(prixProduit);
-        // Calcul du prix total du panier
-        prixTotal = prixTotal + prixProduit;
-        console.log(prixTotal);
-        // Changement du prix total du panier (visuellement)
-        document.getElementById("totalPrice").innerHTML = prixTotal;
+        await afficherProduit(canapsSelectPanierJS, compteur);
 
         // Récupère l'index à chacun des tours (de la boucle)
         compteur = compteur + 1; // idem : 'compteur++;' 
     }
+
+    // Changement du prix total du panier (visuellement)
+    document.getElementById("totalPrice").innerHTML = totalPanier;
+
+    // Suppression du noeud contenant la carte initiale
+    let cardParent = document.getElementById("cart__items");
+    let cardEnfant = document.querySelector("#cart__items > article");
+    cardParent.removeChild(cardEnfant);
 
     // Nb d'articles
     document.getElementById("totalQuantity").innerText = panierJS.length;
 };
 
 // Fonction qui affiche chacun des 'canap' sélectionnés, en récupérant les données dans l'API et du LS et en affichant ces informations / attribut (en paramètre) 'canap' = clone de l'attribut 'canapsSelectPanierJS' déclaré antérieurement (objet JS)
-async function afficherProduit(canap, index) {
-    await fetch("http://localhost:3000/api/products/" + canap.idProduit)
+function afficherProduit(canap, index) {
+    return fetch("http://localhost:3000/api/products/" + canap.idProduit)
         .then(function (response) {
             //console.table(response)
             return response.json()
@@ -86,8 +82,11 @@ async function afficherProduit(canap, index) {
             });
 
             // Prix (initial) du 'canap' sélectionné
-            let prixCanap = data.price * canap.qte;        
+            let prixCanap = data.price * canap.qte;
             clone.querySelector(".cart__item__content .prixProduitSelect").innerText = prixCanap + " €";
+
+            // Calcul du prix total du panier
+            totalPanier = totalPanier + prixCanap;
 
             // Supression d'un 'canap' dans le panier
             let btnSup = clone.querySelector(".deleteItem");
@@ -99,10 +98,6 @@ async function afficherProduit(canap, index) {
             let cardParent = document.getElementById("cart__items");
             // Ajout de nouveaux enfants (cards clonnées) à la fin de la liste des enfants (déjà existants) du parent 'cardParent'
             cardParent.appendChild(clone);
-
-            // La fonction 'afficherProduit' retourne le prix final de chacun des 'canap' sélectionnés
-            console.log("prix total du canapé : " + prixCanap);
-            return (prixCanap);
         })
         .catch(function (err) {});
 };
@@ -141,11 +136,6 @@ function supCanap(index) {
 
     // Création d'une nouvelle valeur à la clé 'panier'
     localStorage.setItem("panier", panierLS);
-
-    // Suppression du noeud contenant la carte initiale (visuellement)
-    let cardParent = document.getElementById("cart__items");
-    let cardEnfant = document.querySelector("#cart__items > article");
-    cardParent.removeChild(cardEnfant);
 
     // Pour rafraichir la page : mise à jour des infos
     document.location.reload();

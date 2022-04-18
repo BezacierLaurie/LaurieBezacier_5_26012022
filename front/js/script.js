@@ -17,9 +17,9 @@ function recupDataAPI() {
             // Carte initiale : récupération
             let card = document.querySelector("#items > a");
 
-            // Suppression du noeud contenant la carte initiale (visuellement)
+            // Suppression du noeud contenant la carte initiale
             let cardParent = document.getElementById("items");
-            let cardEnfant = document.querySelector("#items > a");
+            let cardEnfant = document.querySelector("#items > a"); // = 'let card'
             cardParent.removeChild(cardEnfant);
 
             // Création de la boucle : clonage des cartes + récupération des infos de chaque produit
