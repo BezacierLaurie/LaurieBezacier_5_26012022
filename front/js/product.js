@@ -14,7 +14,7 @@ async function recupDataProduit() {
             return response.json()
         })
         .then(function (data) {
-            // Modifications des données de chaque produit
+            // Modification des données de chaque produit
             modifDataProduit(data);
         })
         .catch(function (err) {});

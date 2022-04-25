@@ -1,6 +1,5 @@
-// Récupération de l'id de chaque 'canap' dans LS
-let panierLS = localStorage.getItem("panier");
-//console.log(panierLS)
+// Récupération de 'panier' du LS
+let panierLS = localStorage.getItem("panier"); // String
 
 // Prix total du panier - Valeur initiale
 var totalPanier = 0;
@@ -142,3 +141,146 @@ function supCanap(index) {
 
     console.log("le canap a bien été supprimé");
 };
+
+// Formulaire coordonnées utilisateur
+
+// Vérification des données utilisateur
+
+var form = document.getElementsByClassName('cart__order__form');
+
+// Prénom (en HTML et CSS)
+var firstNameUser = document.getElementById("firstName");
+
+// Nom
+var lastNameUser = document.getElementById("lastName");
+let messError_LastNameUser = document.getElementById("lastNameErrorMsg");
+
+lastNameUser.addEventListener('change', function (event) {
+    valid_LastNameUser(event);
+});
+
+function valid_LastNameUser(event) {
+    if (isValid_LastName(event.target.value) || lastNameUser.value == "") {
+        messError_LastNameUser.innerText = " ";
+    } else {
+        messError_LastNameUser.innerText = "Valeur du champ incorrecte";
+        
+        // Pour empecher l'envoi des données du formulaire
+        event.preventDefault();
+    }
+};
+
+// Regex pour vérifier la valeur de 'lastNameUser'
+function isValid_LastName(value) {
+    return /^[a-zA-Z\-]+$/.test(value);
+};
+
+// Adresse
+var addressUser = document.getElementById("address");
+let messError_AddressUser = document.getElementById("addressErrorMsg");
+
+addressUser.addEventListener('change', function (event) {
+    valid_AddressUser(event);
+});
+
+function valid_AddressUser(event) {
+    if (isValid_AddressCity(event.target.value) || addressUser.value == "") {
+        messError_AddressUser.innerText = " ";
+    } else {
+        messError_AddressUser.innerText = "Valeur du champ incorrecte";
+        
+        // Pour empecher l'envoi des données du formulaire
+        event.preventDefault();
+    }
+};
+
+// Ville
+var cityUser = document.getElementById("city");
+let messError_CityUser = document.getElementById("cityErrorMsg");
+
+cityUser.addEventListener('change', function (event) {
+    valid_CityUser(event);
+});
+
+function valid_CityUser(event) {
+    if (isValid_AddressCity(event.target.value) || cityUser.value == "") {
+        messError_CityUser.innerText = " ";
+    } else {
+        messError_CityUser.innerText = "Valeur du champ incorrecte";
+        
+        // Pour empecher l'envoi des données du formulaire
+        event.preventDefault();
+    }
+};
+
+// Regex (identique) pour vérifier la valeur de 'addressUser' et de 'cityUser'
+function isValid_AddressCity(value) {
+    return /^[a-zA-Z0-9\s,.'-]{3,}$/.test(value);
+};
+
+// Mail
+var mailUser = document.getElementById("email");
+let messError_MailUser = document.getElementById("emailErrorMsg");
+
+mailUser.addEventListener('change', function (event) {
+    valid_MailUser(event);
+});
+
+function valid_MailUser(event) {
+    if (isValid_Mail(event.target.value) || mailUser.value == "") {
+        messError_MailUser.innerText = " ";
+    } else {
+        messError_MailUser.innerText = "Valeur du champ incorrecte";
+        
+        // Pour empecher l'envoi des données du formulaire
+        event.preventDefault();
+    }
+};
+
+// Regex pour vérifier la valeur de 'mailUser'
+function isValid_Mail(value) {
+    var regex_MailUser = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex_MailUser.test(value);
+};
+
+// Envoi des données utilisateur - Btn 'Commander !'
+
+document.addEventListener('submit', function (event) {
+    event.preventDefault()
+
+    let newFirstName = form.firstName.value;
+    let newLastName = form.lastName.value;
+    let newAddress = form.address.value;
+    let newCity = form.city.value;
+    let newEmail = form.email.value;
+
+    let contactUser = {
+        contactUserObj: {
+            firstName: newFirstName,
+            lastName: newLastName,
+            address: newAddress,
+            city: newCity,
+            email: newEmail
+        },
+        products: [panierJS.idProducts]
+    };
+
+    fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contactUser)
+        })
+        .then(function (response) {
+            return response.json()
+        })
+        .then(function (data) {
+            console.log('Success:', data);
+        })
+        .catch(function (err) {
+            console.error('Error:', error);
+        });
+
+});

@@ -170,3 +170,13 @@ h2 {
 		width: 75%;
 	}
 }
+
+/* Modification du code - Formulaire coordonnées utilisateur */
+
+#firstNameErrorMsg{
+	display:none;
+  }
+  
+  #firstName:not(:placeholder-shown):invalid + #firstNameErrorMsg{
+	display:block;
+  }
