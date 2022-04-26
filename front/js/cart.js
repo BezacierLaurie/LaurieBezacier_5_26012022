@@ -146,8 +146,6 @@ function supCanap(index) {
 
 // Vérification des données utilisateur
 
-var form = document.getElementsByClassName('cart__order__form');
-
 // Prénom (en HTML et CSS)
 var firstNameUser = document.getElementById("firstName");
 
@@ -164,15 +162,16 @@ function valid_LastNameUser(event) {
         messError_LastNameUser.innerText = " ";
     } else {
         messError_LastNameUser.innerText = "Valeur du champ incorrecte";
-        
-        // Pour empecher l'envoi des données du formulaire
+
+        // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
 };
 
 // Regex pour vérifier la valeur de 'lastNameUser'
 function isValid_LastName(value) {
-    return /^[a-zA-Z\-]+$/.test(value);
+    let regex_LastName = /^[a-zA-Z\-]+$/;
+    return regex_LastName.test(value);
 };
 
 // Adresse
@@ -188,8 +187,8 @@ function valid_AddressUser(event) {
         messError_AddressUser.innerText = " ";
     } else {
         messError_AddressUser.innerText = "Valeur du champ incorrecte";
-        
-        // Pour empecher l'envoi des données du formulaire
+
+        // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
 };
@@ -207,15 +206,16 @@ function valid_CityUser(event) {
         messError_CityUser.innerText = " ";
     } else {
         messError_CityUser.innerText = "Valeur du champ incorrecte";
-        
-        // Pour empecher l'envoi des données du formulaire
+
+        // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
 };
 
 // Regex (identique) pour vérifier la valeur de 'addressUser' et de 'cityUser'
 function isValid_AddressCity(value) {
-    return /^[a-zA-Z0-9\s,.'-]{3,}$/.test(value);
+    let regex_AdressCity = /^[a-zA-Z0-9\é\è\ê\s,.'-]{3,}$/;
+    return regex_AdressCity.test(value);
 };
 
 // Mail
@@ -231,28 +231,40 @@ function valid_MailUser(event) {
         messError_MailUser.innerText = " ";
     } else {
         messError_MailUser.innerText = "Valeur du champ incorrecte";
-        
-        // Pour empecher l'envoi des données du formulaire
+
+        // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
 };
 
 // Regex pour vérifier la valeur de 'mailUser'
 function isValid_Mail(value) {
-    var regex_MailUser = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex_MailUser.test(value);
+    let regex_Mail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex_Mail.test(value);
 };
 
 // Envoi des données utilisateur - Btn 'Commander !'
 
-document.addEventListener('submit', function (event) {
+let btnOrder = document.getElementById("order");
+
+btnOrder.addEventListener('submit', function (event) {
+
+    // Pour empêcher les paramètres par défaut du 'submit'
     event.preventDefault()
 
-    let newFirstName = form.firstName.value;
-    let newLastName = form.lastName.value;
-    let newAddress = form.address.value;
-    let newCity = form.city.value;
-    let newEmail = form.email.value;
+    let panierJS = JSON.parse(panierLS);
+
+    let inputFirstName = document.getElementById("firstName").value;
+    let inputLastName = document.getElementById("lastName").value;
+    let inputAddress = document.getElementById("address").value;
+    let inputCity = document.getElementById("city").value;
+    let inputEmail = document.getElementById("email").value;
+
+    let newFirstName = inputFirstName;
+    let newLastName = inputLastName;
+    let newAddress = inputAddress;
+    let newCity = inputCity;
+    let newEmail = inputEmail;
 
     let contactUser = {
         contactUserObj: {
@@ -262,7 +274,7 @@ document.addEventListener('submit', function (event) {
             city: newCity,
             email: newEmail
         },
-        products: [panierJS.idProducts]
+        products: [panierJS.idProduit]
     };
 
     fetch("http://localhost:3000/api/products/order", {
@@ -278,6 +290,9 @@ document.addEventListener('submit', function (event) {
         })
         .then(function (data) {
             console.log('Success:', data);
+
+            // num de commande - comment la créer ?
+
         })
         .catch(function (err) {
             console.error('Error:', error);

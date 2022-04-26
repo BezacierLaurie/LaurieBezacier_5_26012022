@@ -102,6 +102,6 @@ btn.addEventListener('click', function (event) {
     // Création d'une nouvelle valeur à la clé 'panier'
     localStorage.setItem("panier", panier);
 
-    // Pour empecher le changement de page au 'clic' (du Btn)
+    // Pour empêcher les paramètres par défaut du 'clic' (le changement de page)
     event.preventDefault();
 });
