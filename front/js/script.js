@@ -43,8 +43,8 @@ function recupDataAPI() {
                 // OU clone.querySelector("article > p").innerText = canap.description;
 
                 // Modification du lien de chaque produit
-                clone.setAttribute("href", "product.html?id=" + canap._id);
-                console.log("product.html?id=" + canap._id)
+                clone.setAttribute("href", "./product.html?id=" + canap._id);
+                console.log(canap._id)
 
                 // Sélectionne le futur parent 
                 let parent = document.getElementById("items");

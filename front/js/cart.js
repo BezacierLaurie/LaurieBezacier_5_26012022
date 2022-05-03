@@ -170,7 +170,7 @@ function valid_LastNameUser(event) {
 
 // Regex pour vérifier la valeur de 'lastNameUser'
 function isValid_LastName(value) {
-    let regex_LastName = /^[a-zA-Z\-]+$/;
+    let regex_LastName = /^[a-zA-ZÀ-ÿ]+$/;
     return regex_LastName.test(value);
 };
 
@@ -245,36 +245,35 @@ function isValid_Mail(value) {
 
 // Envoi des données utilisateur - Btn 'Commander !'
 
-let btnOrder = document.getElementById("order");
+let form = document.querySelector("form");
 
-btnOrder.addEventListener('submit', function (event) {
+form.addEventListener('submit', function (event) {
 
     // Pour empêcher les paramètres par défaut du 'submit'
     event.preventDefault()
 
     let panierJS = JSON.parse(panierLS);
 
-    let inputFirstName = document.getElementById("firstName").value;
-    let inputLastName = document.getElementById("lastName").value;
-    let inputAddress = document.getElementById("address").value;
-    let inputCity = document.getElementById("city").value;
-    let inputEmail = document.getElementById("email").value;
+    let newFirstName = document.getElementById("firstName").value;
+    let newLastName = document.getElementById("lastName").value;
+    let newAddress = document.getElementById("address").value;
+    let newCity = document.getElementById("city").value;
+    let newEmail = document.getElementById("email").value;
 
-    let newFirstName = inputFirstName;
-    let newLastName = inputLastName;
-    let newAddress = inputAddress;
-    let newCity = inputCity;
-    let newEmail = inputEmail;
+    for (let canapsSelect of panierJS) {
+        var arrayIdProduct = [canapsSelect.idProduit];
+        console.log(arrayIdProduct);
+    };
 
     let contactUser = {
-        contactUserObj: {
+        contact: {
             firstName: newFirstName,
             lastName: newLastName,
             address: newAddress,
             city: newCity,
             email: newEmail
         },
-        products: [panierJS.idProduit]
+        products: arrayIdProduct
     };
 
     fetch("http://localhost:3000/api/products/order", {
@@ -291,11 +290,13 @@ btnOrder.addEventListener('submit', function (event) {
         .then(function (data) {
             console.log('Success:', data);
 
-            // num de commande - comment la créer ?
+            let idCommandeUser = data.orderId;
+            console.log(idCommandeUser);
 
+            // Redirection vers la page 'confirmation'
+            document.location.replace("../html/confirmation.html?orderId=" + idCommandeUser);
         })
-        .catch(function (err) {
+        .catch(function (error) {
             console.error('Error:', error);
         });
-
 });

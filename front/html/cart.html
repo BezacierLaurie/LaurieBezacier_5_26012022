@@ -88,12 +88,11 @@
               </span> €</p>
           </div>
           <div class="cart__order">
-            <!-- Modification du code ('novalidate') -->
-            <form novalidate method="get" class="cart__order__form">
+            <form methode="get" class="cart__order__form">
               <div class="cart__order__form__question">
                 <label for="firstName">Prénom :</label>
                 <!-- Modification du code (Regex sans JS) -->
-                <input type="text" placeholder=" " pattern="^[a-zA-Z\-]+$" name="firstName" id="firstName" required>
+                <input type="text" placeholder=" " pattern="^[a-zA-ZÀ-ÿ]+$" name="firstName" id="firstName" required>
                 <p id="firstNameErrorMsg">Valeur du champ incorrecte</p>
               </div>
               <div class="cart__order__form__question">
@@ -150,7 +149,6 @@
     </div>
   </footer>
   <script src="../js/cart.js"></script>
-  <script src="../js/confirmation.js"></script>
 </body>
 
 </html>
