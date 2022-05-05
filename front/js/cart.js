@@ -146,44 +146,54 @@ function supCanap(index) {
 
 // Vérification des données utilisateur
 
-// Prénom (en HTML et CSS)
-var firstNameUser = document.getElementById("firstName");
+// First Name (en HTML et CSS)
 
-// Nom
-var lastNameUser = document.getElementById("lastName");
-let messError_LastNameUser = document.getElementById("lastNameErrorMsg");
+// Last Name
+
+let lastNameUser = document.getElementById("lastName");
 
 lastNameUser.addEventListener('change', function (event) {
-    valid_LastNameUser(event);
+    validChampForm(event);
 });
 
-function valid_LastNameUser(event) {
-    if (isValid_LastName(event.target.value) || lastNameUser.value == "") {
+// Address
+let addressUser = document.getElementById("address");
+
+addressUser.addEventListener('change', function (event) {
+    validChampForm(event);
+});
+
+// City
+let cityUser = document.getElementById("city");
+
+cityUser.addEventListener('change', function (event) {
+    validChampForm(event);
+});
+
+// Mail
+let mailUser = document.getElementById("email");
+
+mailUser.addEventListener('change', function (event) {
+    validChampForm(event);
+});
+
+function validChampForm(event) {
+
+    let messError_LastNameUser = document.getElementById("lastNameErrorMsg");
+    let messError_AddressUser = document.getElementById("addressErrorMsg");
+    let messError_CityUser = document.getElementById("cityErrorMsg");
+    let messError_MailUser = document.getElementById("emailErrorMsg");
+
+    if (isValid(event.target.value) || lastNameUser.value == "") {
         messError_LastNameUser.innerText = " ";
     } else {
         messError_LastNameUser.innerText = "Valeur du champ incorrecte";
-
+        
         // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
-};
 
-// Regex pour vérifier la valeur de 'lastNameUser'
-function isValid_LastName(value) {
-    let regex_LastName = /^[a-zA-ZÀ-ÿ]+$/;
-    return regex_LastName.test(value);
-};
-
-// Adresse
-var addressUser = document.getElementById("address");
-let messError_AddressUser = document.getElementById("addressErrorMsg");
-
-addressUser.addEventListener('change', function (event) {
-    valid_AddressUser(event);
-});
-
-function valid_AddressUser(event) {
-    if (isValid_AddressCity(event.target.value) || addressUser.value == "") {
+    if (isValid(event.target.value) || addressUser.value == "") {
         messError_AddressUser.innerText = " ";
     } else {
         messError_AddressUser.innerText = "Valeur du champ incorrecte";
@@ -191,18 +201,8 @@ function valid_AddressUser(event) {
         // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
-};
 
-// Ville
-var cityUser = document.getElementById("city");
-let messError_CityUser = document.getElementById("cityErrorMsg");
-
-cityUser.addEventListener('change', function (event) {
-    valid_CityUser(event);
-});
-
-function valid_CityUser(event) {
-    if (isValid_AddressCity(event.target.value) || cityUser.value == "") {
+    if (isValid(event.target.value) || cityUser.value == "") {
         messError_CityUser.innerText = " ";
     } else {
         messError_CityUser.innerText = "Valeur du champ incorrecte";
@@ -210,24 +210,8 @@ function valid_CityUser(event) {
         // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
-};
 
-// Regex (identique) pour vérifier la valeur de 'addressUser' et de 'cityUser'
-function isValid_AddressCity(value) {
-    let regex_AdressCity = /^[a-zA-Z0-9\é\è\ê\s,.'-]{3,}$/;
-    return regex_AdressCity.test(value);
-};
-
-// Mail
-var mailUser = document.getElementById("email");
-let messError_MailUser = document.getElementById("emailErrorMsg");
-
-mailUser.addEventListener('change', function (event) {
-    valid_MailUser(event);
-});
-
-function valid_MailUser(event) {
-    if (isValid_Mail(event.target.value) || mailUser.value == "") {
+    if (isValid(event.target.value) || mailUser.value == "") {
         messError_MailUser.innerText = " ";
     } else {
         messError_MailUser.innerText = "Valeur du champ incorrecte";
@@ -237,10 +221,22 @@ function valid_MailUser(event) {
     }
 };
 
-// Regex pour vérifier la valeur de 'mailUser'
-function isValid_Mail(value) {
+// Regex
+function isValid(value) {
+    let regex_LastName = /^[a-zA-ZÀ-ÿ '-]+$/;
+    let regex_AdressCity = /^[a-zA-Z0-9\é\è\ê\s,.'-]{3,}$/;
     let regex_Mail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex_Mail.test(value);
+
+    if (regex_LastName.test(value)) {
+        console.log(regex_LastName.test(value));
+        return true;
+    }
+    if (regex_AdressCity.test(value)) {
+        return true;
+    }
+    if (regex_Mail.test(value)) {
+        return true;
+    }
 };
 
 // Envoi des données utilisateur - Btn 'Commander !'
@@ -260,9 +256,9 @@ form.addEventListener('submit', function (event) {
     let newCity = document.getElementById("city").value;
     let newEmail = document.getElementById("email").value;
 
+    var arrayIdProduct = [];
     for (let canapsSelect of panierJS) {
-        var arrayIdProduct = [canapsSelect.idProduit];
-        console.log(arrayIdProduct);
+        arrayIdProduct.push(canapsSelect.idProduit);
     };
 
     let contactUser = {
@@ -275,6 +271,7 @@ form.addEventListener('submit', function (event) {
         },
         products: arrayIdProduct
     };
+    console.log(arrayIdProduct);
 
     fetch("http://localhost:3000/api/products/order", {
             method: "POST",
