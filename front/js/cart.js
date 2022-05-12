@@ -148,95 +148,51 @@ function supCanap(index) {
 
 // First Name (en HTML et CSS)
 
+// Regex
+let regex_LastName = /^[a-zA-ZÀ-ÿ '-]+$/;
+let regex_AdressCity = /^[a-zA-Z0-9\é\è\ê\s,.'-]{3,}$/;
+let regex_Mail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 // Last Name
-
 let lastNameUser = document.getElementById("lastName");
-
 lastNameUser.addEventListener('change', function (event) {
-    validChampForm(event);
+    validateChampForm(event, "lastNameErrorMsg", regex_LastName);
 });
 
 // Address
 let addressUser = document.getElementById("address");
-
 addressUser.addEventListener('change', function (event) {
-    validChampForm(event);
+    validateChampForm(event, "addressErrorMsg", regex_AdressCity);
 });
 
 // City
 let cityUser = document.getElementById("city");
-
 cityUser.addEventListener('change', function (event) {
-    validChampForm(event);
+    validateChampForm(event, "cityErrorMsg", regex_AdressCity);
 });
 
 // Mail
 let mailUser = document.getElementById("email");
-
 mailUser.addEventListener('change', function (event) {
-    validChampForm(event);
+    validateChampForm(event, "emailErrorMsg", regex_Mail);
 });
 
-function validChampForm(event) {
-
-    let messError_LastNameUser = document.getElementById("lastNameErrorMsg");
-    let messError_AddressUser = document.getElementById("addressErrorMsg");
-    let messError_CityUser = document.getElementById("cityErrorMsg");
-    let messError_MailUser = document.getElementById("emailErrorMsg");
-
-    if (isValid(event.target.value) || lastNameUser.value == "") {
-        messError_LastNameUser.innerText = " ";
+// Afficher et prévenir
+function validateChampForm(event, idMessError, regex) {
+    let messError = document.getElementById(idMessError);
+    if (isValidOrEmpty(event.target.value, regex)) {
+        messError.innerText = " ";
     } else {
-        messError_LastNameUser.innerText = "Valeur du champ incorrecte";
-        
-        // Pour empêcher l'envoi des données du formulaire
-        event.preventDefault();
-    }
-
-    if (isValid(event.target.value) || addressUser.value == "") {
-        messError_AddressUser.innerText = " ";
-    } else {
-        messError_AddressUser.innerText = "Valeur du champ incorrecte";
-
-        // Pour empêcher l'envoi des données du formulaire
-        event.preventDefault();
-    }
-
-    if (isValid(event.target.value) || cityUser.value == "") {
-        messError_CityUser.innerText = " ";
-    } else {
-        messError_CityUser.innerText = "Valeur du champ incorrecte";
-
-        // Pour empêcher l'envoi des données du formulaire
-        event.preventDefault();
-    }
-
-    if (isValid(event.target.value) || mailUser.value == "") {
-        messError_MailUser.innerText = " ";
-    } else {
-        messError_MailUser.innerText = "Valeur du champ incorrecte";
+        messError.innerText = "Valeur du champ incorrecte";
 
         // Pour empêcher l'envoi des données du formulaire
         event.preventDefault();
     }
 };
 
-// Regex
-function isValid(value) {
-    let regex_LastName = /^[a-zA-ZÀ-ÿ '-]+$/;
-    let regex_AdressCity = /^[a-zA-Z0-9\é\è\ê\s,.'-]{3,}$/;
-    let regex_Mail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (regex_LastName.test(value)) {
-        console.log(regex_LastName.test(value));
-        return true;
-    }
-    if (regex_AdressCity.test(value)) {
-        return true;
-    }
-    if (regex_Mail.test(value)) {
-        return true;
-    }
+// Vérifie la valeur du champ grâce au Regex (boolean)
+function isValidOrEmpty(value, regex) {
+    return regex.test(value) || value == "";
 };
 
 // Envoi des données utilisateur - Btn 'Commander !'
