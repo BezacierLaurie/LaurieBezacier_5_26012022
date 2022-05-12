@@ -29,7 +29,7 @@ function modifDataProduit(data) {
 
     document.getElementById("description").innerText = data.description;
 
-    // Liste déroulante
+    // Liste déroulante (choix de la couleur)
     let tabColors = data.colors;
 
     let select = document.getElementById("colors");
